@@ -9,11 +9,12 @@ namespace AccountLimit.Domain.Commom
 {
     public class Result
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsSuccess { get; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsFailure => !IsSuccess;
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public string Error { get; }
+        public string? Error { get; }
 
         protected Result(bool IsSucess, string error)
         {
@@ -21,11 +22,16 @@ namespace AccountLimit.Domain.Commom
             Error = error;
         }
 
-        public static Result Success() => new(true, string.Empty);
+        protected Result(bool IsSucess)
+        {
+            IsSuccess = IsSucess;
+        }
+
+        public static Result Success() => new(true, null);
 
         public static Result Failure(string error) => new(false, error);
 
-        public static Result<T> Success<T>(T value) => new(value, true, string.Empty);
+        public static Result<T> Success<T>(T value) => new(value, true, null);
 
         public static Result<T> Failure<T>(string error) => new(default, false, error);
 
