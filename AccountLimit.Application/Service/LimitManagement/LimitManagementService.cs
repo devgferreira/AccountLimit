@@ -39,18 +39,18 @@ namespace AccountLimit.Application.Service.LimitManagement
             return Result.Success();
         }
 
-        public async Task<Result> DeleteLimitManagement(string cpf)
+        public async Task<Result> DeleteLimitManagement(string cpf, string agency)
         {
             try
             {
-                await LimitManagementExists(cpf);
+                await LimitManagementExists(new LimitManagementRequest { Cpf = cpf, Agency = agency });
             }
             catch (Exception ex)
             {
                 return Result.Failure(ex.Message);
             }
 
-            await _repository.DeleteLimitManagement(cpf);
+            await _repository.DeleteLimitManagement(cpf, agency);
             return Result.Success();
         }
 
@@ -68,9 +68,9 @@ namespace AccountLimit.Application.Service.LimitManagement
 
         }
 
-        public async Task<Result> UpdateLimitManagement(string cpf, LimitManagementUpdateDTO request)
+        public async Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request)
         {
-            var limitManagement = await LimitManagementExists(cpf);
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpf, Agency = agency });
 
             var updateePixTransactionLimitResult = limitManagement.UpdatePixTransactionLimit(request.PixTransactionLimit);
             if (updateePixTransactionLimitResult.IsFailure)
@@ -83,9 +83,9 @@ namespace AccountLimit.Application.Service.LimitManagement
 
 
         #region Validation
-        private async Task<LimitManagementInfo> LimitManagementExists(string cpf)
+        private async Task<LimitManagementInfo> LimitManagementExists(LimitManagementRequest request)
         {
-            var limitManagementList = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = cpf});
+            var limitManagementList = await _repository.SelectLimitManagement(request);
             if (!limitManagementList.Any())
                 throw new Exception("Limit management not found.");
             return limitManagementList.FirstOrDefault();

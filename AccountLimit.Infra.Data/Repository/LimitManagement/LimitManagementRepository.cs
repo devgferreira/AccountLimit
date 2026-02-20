@@ -24,13 +24,12 @@ namespace AccountLimit.Infra.Data.Repository.LimitManagementRepository
 
         public async Task CreateLimitManagement(LimitManagementInfo request)
         {
-
             await _context.SaveAsync(request.ToEntity());
         }
 
-        public async Task DeleteLimitManagement(string cpf)
+        public async Task DeleteLimitManagement(string cpf, string agency)
         {
-            await _context.DeleteAsync<LimitManagementEntity>(cpf);
+            await _context.DeleteAsync<LimitManagementEntity>(cpf, agency);
         }
         public async Task<List<LimitManagementInfo>> SelectLimitManagement(LimitManagementRequest request)
         {
