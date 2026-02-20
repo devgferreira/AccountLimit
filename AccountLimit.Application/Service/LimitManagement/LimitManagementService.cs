@@ -24,6 +24,7 @@ namespace AccountLimit.Application.Service.LimitManagement
 
         public async Task<Result> CreateLimitManagement(LimitManagementCreateDTO request)
         {
+
             var createResult = LimitManagementInfo.Create(
                 request.Cpf,
                 request.Agency,
@@ -34,6 +35,11 @@ namespace AccountLimit.Application.Service.LimitManagement
             if (createResult.IsFailure)
                 return Result.Failure(createResult.Error);
 
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = request.Cpf, Agency = request.Agency });
+
+            if (limitManagement.IsSuccess)
+                return Result.Failure("Limit management already exists for this CPF and Agency.");
+
             await _repository.CreateLimitManagement(createResult.Value);
 
             return Result.Success();
@@ -41,14 +47,11 @@ namespace AccountLimit.Application.Service.LimitManagement
 
         public async Task<Result> DeleteLimitManagement(string cpf, string agency)
         {
-            try
-            {
-                await LimitManagementExists(new LimitManagementRequest { Cpf = cpf, Agency = agency });
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpf, Agency = agency });
+            if (limitManagement.IsFailure)
+                return Result.Failure(limitManagement.Error);
+
 
             await _repository.DeleteLimitManagement(cpf, agency);
             return Result.Success();
@@ -71,24 +74,27 @@ namespace AccountLimit.Application.Service.LimitManagement
         public async Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request)
         {
             var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpf, Agency = agency });
+            if(limitManagement.IsFailure)
+                return Result.Failure(limitManagement.Error);
 
-            var updateePixTransactionLimitResult = limitManagement.UpdatePixTransactionLimit(request.PixTransactionLimit);
+
+            var updateePixTransactionLimitResult = limitManagement.Value.UpdatePixTransactionLimit(request.PixTransactionLimit);
             if (updateePixTransactionLimitResult.IsFailure)
                 return updateePixTransactionLimitResult;
 
-            await _repository.UpdateLimitManagement(limitManagement);
+            await _repository.UpdateLimitManagement(limitManagement.Value);
 
             return Result.Success();
         }
 
 
         #region Validation
-        private async Task<LimitManagementInfo> LimitManagementExists(LimitManagementRequest request)
+        private async Task<Result<LimitManagementInfo>> LimitManagementExists(LimitManagementRequest request)
         {
             var limitManagementList = await _repository.SelectLimitManagement(request);
             if (!limitManagementList.Any())
-                throw new Exception("Limit management not found.");
-            return limitManagementList.FirstOrDefault();
+                Result.Failure("Limit management not found.");
+            return Result.Success(limitManagementList.FirstOrDefault());
         }
         #endregion
     }

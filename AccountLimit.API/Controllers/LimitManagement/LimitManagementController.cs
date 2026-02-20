@@ -25,17 +25,17 @@ namespace AccountLimit.API.Controllers.LimitManagement
             return Ok(result);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateLimitManagement([FromQuery] string cpf, [FromBody] LimitManagementUpdateDTO request)
+        public async Task<IActionResult> UpdateLimitManagement([FromQuery] string cpf, [FromQuery] string agency, [FromBody] LimitManagementUpdateDTO request)
         {
-            var result = await _service.UpdateLimitManagement(cpf, request);
+            var result = await _service.UpdateLimitManagement(cpf, agency, request);
             if (result.IsFailure)
                 return BadRequest(result);
             return Ok(result);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteLimitManagement([FromQuery] string cpf)
+        public async Task<IActionResult> DeleteLimitManagement([FromQuery] string cpf, [FromQuery] string agency)
         {
-            var result = await _service.DeleteLimitManagement(cpf);
+            var result = await _service.DeleteLimitManagement(cpf, agency);
             if (result.IsFailure)
                 return BadRequest(result);
             return Ok(result);
