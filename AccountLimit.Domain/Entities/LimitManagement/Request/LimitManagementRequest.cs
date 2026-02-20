@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountLimit.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace AccountLimit.Domain.Entities.LimitManagement.Request
     public class LimitManagementRequest
     {
         public string Cpf { get; set; }
+        public string? Agency { get; set; }
+
     }
 }

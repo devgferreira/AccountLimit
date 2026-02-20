@@ -34,11 +34,24 @@ namespace AccountLimit.Infra.Data.Repository.LimitManagementRepository
         }
         public async Task<List<LimitManagementInfo>> SelectLimitManagement(LimitManagementRequest request)
         {
-            var entities = await _context
-                .QueryAsync<LimitManagementEntity>(request.Cpf)
-                .GetRemainingAsync();
+            List<LimitManagementEntity> entities;
 
-            var result = new List<LimitManagementInfo>();
+            if (string.IsNullOrWhiteSpace(request.Agency))
+            {
+                entities = await _context
+                    .QueryAsync<LimitManagementEntity>(request.Cpf)
+                    .GetRemainingAsync();
+            }
+            else
+            {
+                var entity = await _context.LoadAsync<LimitManagementEntity>(request.Cpf, request.Agency);
+
+                entities = entity is null
+                    ? new List<LimitManagementEntity>()
+                    : new List<LimitManagementEntity> { entity };
+            }
+
+            var result = new List<LimitManagementInfo>(entities.Count);
 
             foreach (var e in entities)
             {

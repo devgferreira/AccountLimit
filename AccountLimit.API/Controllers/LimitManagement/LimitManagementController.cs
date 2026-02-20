@@ -21,7 +21,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.CreateLimitManagement(request);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result);
             return Ok(result);
         }
         [HttpPut]
@@ -29,7 +29,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.UpdateLimitManagement(cpf, request);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result);
             return Ok(result);
         }
         [HttpDelete]
@@ -37,7 +37,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.DeleteLimitManagement(cpf);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result);
             return Ok(result);
         }
         [HttpGet]
@@ -45,7 +45,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.SelectLimitManagement(request);
             if (result.IsFailure)
-                return BadRequest(result.Error);
+                return BadRequest(result);
             return Ok(result);
         }
     }

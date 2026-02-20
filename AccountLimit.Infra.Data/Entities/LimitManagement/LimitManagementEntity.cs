@@ -13,7 +13,7 @@ namespace AccountLimit.Infra.Data.Entities.LimitManagement
     {
         [DynamoDBHashKey("pk")]
         public string Cpf { get; set; }
-        [DynamoDBProperty]
+        [DynamoDBRangeKey("sk")]
         public string Agency { get; set; }
         [DynamoDBProperty]
         public string Account { get; set; }

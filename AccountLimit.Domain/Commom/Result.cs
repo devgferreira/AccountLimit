@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AccountLimit.Domain.Commom
@@ -9,7 +10,9 @@ namespace AccountLimit.Domain.Commom
     public class Result
     {
         public bool IsSuccess { get; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsFailure => !IsSuccess;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Error { get; }
 
         protected Result(bool IsSucess, string error)
