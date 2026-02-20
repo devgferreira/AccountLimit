@@ -12,7 +12,7 @@ namespace AccountLimit.Domain.ValueObjects
         {
             Value = value;
         }
-        private string Value { get; }
+        public string Value { get; }
 
         public static Result<Cpf> Create(string rawCpf)
         {

@@ -13,7 +13,6 @@ namespace AccountLimit.Application.DTO.LimitManagement
         public string Cpf { get; set; }
         public string Agency { get; set; }
         public string Account { get; set; }
-        public Period Period { get; set; }
         public decimal PixTransactionLimit { get; set; }
     }
 }

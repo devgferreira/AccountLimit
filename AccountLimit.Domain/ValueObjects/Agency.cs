@@ -13,7 +13,7 @@ namespace AccountLimit.Domain.ValueObjects
         {
             Value = value;
         }
-        private string Value;
+        public string Value;
 
         public static Result<Agency> Create(string rawAgency)
         {

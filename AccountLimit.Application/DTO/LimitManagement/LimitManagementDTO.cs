@@ -9,11 +9,9 @@ namespace AccountLimit.Application.DTO.LimitManagement
 {
     public class LimitManagementDTO
     {   
-        public Guid Id { get; set; }
         public string Cpf { get; set; }
         public string Agency { get; set; }
         public string Account { get; set; }
-        public Period Period { get; set; }
         public decimal PixTransactionLimit { get; set; }
     }
 }

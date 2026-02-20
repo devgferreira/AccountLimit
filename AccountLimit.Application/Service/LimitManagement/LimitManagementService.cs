@@ -28,7 +28,6 @@ namespace AccountLimit.Application.Service.LimitManagement
                 request.Cpf,
                 request.Agency,
                 request.Account,
-                request.Period,
                 request.PixTransactionLimit
             );
 
@@ -63,7 +62,6 @@ namespace AccountLimit.Application.Service.LimitManagement
                 Cpf = x.Cpf.ToString(),
                 Agency = x.Agency.ToString(),
                 Account = x.Account.ToString(),
-                Period = x.Period,
                 PixTransactionLimit = x.PixTransactionLimit.Value
             }).ToList());
 
