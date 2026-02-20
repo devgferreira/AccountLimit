@@ -11,7 +11,6 @@ namespace AccountLimit.Domain.Entities.LimitManagement
 {
     public class LimitManagementInfo
     {
-        public Guid Id { get; private set; }
         public Cpf Cpf { get; private set; }
         public Agency Agency { get; private set; }
         public Account Account { get; private set; }
@@ -25,6 +24,18 @@ namespace AccountLimit.Domain.Entities.LimitManagement
 
         public LimitManagementInfo()
         {
+        }
+
+        public Result UpdatePixTransactionLimit(decimal newLimit)
+        {
+            var result = PixTransactionLimit.Create(newLimit);
+
+            if (result.IsFailure)
+                return Result.Failure(result.Error);
+
+            PixTransactionLimit = result.Value;
+
+            return Result.Success();
         }
 
         public static Result<LimitManagementInfo> Create(string rawCpf, string rawAgency, string rawAccount, Period period, decimal rawLimit)
