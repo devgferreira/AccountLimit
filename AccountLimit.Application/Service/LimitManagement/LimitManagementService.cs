@@ -1,5 +1,6 @@
 ﻿using AccountLimit.Application.DTO.LimitManagement;
 using AccountLimit.Application.Interface.LimitManagement;
+using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
 using AccountLimit.Domain.Interface;
@@ -21,46 +22,75 @@ namespace AccountLimit.Application.Service.LimitManagement
             _repository = repository;
         }
 
-        public async Task CreateLimitManagement(LimitManagementCreateDTO request)
+        public async Task<Result> CreateLimitManagement(LimitManagementCreateDTO request)
         {
-            var limitManagement = LimitManagementInfo.Create(request.Cpf, request.Agency, request.Account, request.Period, request.PixTransactionLimit);
-            await _repository.CreateLimitManagement(limitManagement.Value);
+            var createResult = LimitManagementInfo.Create(
+                request.Cpf,
+                request.Agency,
+                request.Account,
+                request.Period,
+                request.PixTransactionLimit
+            );
+
+            if (createResult.IsFailure)
+                return Result.Failure(createResult.Error);
+
+            await _repository.CreateLimitManagement(createResult.Value);
+
+            return Result.Success();
         }
 
-        public async Task DeleteLimitManagement(Guid id)
+        public async Task<Result> DeleteLimitManagement(string cpf, string agency)
         {
-            await LimitManagementExists(id);
-            await _repository.DeleteLimitManagement(id);
-        }
-
-        public async Task<List<LimitManagementDTO>> SelectLimitManagement(LimitManagementRequest request)
-        {
-            var limitManagementList = await _repository.SelectLimitManagement(request);
-            return limitManagementList.Select(x => new LimitManagementDTO
+            try
             {
-                Id = x.Id,
+                await LimitManagementExists(cpf, agency);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+
+            await _repository.DeleteLimitManagement(cpf, agency);
+            return Result.Success();
+        }
+
+        public async Task<Result> SelectLimitManagement(LimitManagementRequest request)
+        {
+            var result = await _repository.SelectLimitManagement(request);
+            return Result.Success(result.Select(x => new LimitManagementDTO
+            {
                 Cpf = x.Cpf.ToString(),
                 Agency = x.Agency.ToString(),
                 Account = x.Account.ToString(),
                 Period = x.Period,
                 PixTransactionLimit = x.PixTransactionLimit.Value
-            }).ToList();
+            }).ToList());
+
+
         }
 
-        public async Task UpdateLimitManagement(Guid id, LimitManagementUpdateDTO request)
+        public async Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request)
         {
-            await LimitManagementExists(id);
-            var pixTransactionLimit = PixTransactionLimit.Create(request.PixTransactionLimit);
-            await _repository.UpdateLimitManagement(id, new LimitManagementInfo(pixTransactionLimit.Value));
+            var limitManagement = await LimitManagementExists(cpf, agency);
+
+            var updateePixTransactionLimitResult = limitManagement.UpdatePixTransactionLimit(request.PixTransactionLimit);
+            if (updateePixTransactionLimitResult.IsFailure)
+                return updateePixTransactionLimitResult;
+
+            await _repository.UpdateLimitManagement(limitManagement);
+
+            return Result.Success();
         }
 
 
         #region Validation
-        private async Task LimitManagementExists(Guid id)
+        private async Task<LimitManagementInfo> LimitManagementExists(string cpf, string agency)
         {
-            var limitManagementList = await _repository.SelectLimitManagement(new LimitManagementRequest { Id = id });
+            var limitManagementList = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = cpf, Agency = agency });
             if (!limitManagementList.Any())
                 throw new Exception("Limit management not found.");
+            return limitManagementList.FirstOrDefault();
         }
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using AccountLimit.Application.DTO.LimitManagement;
+using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace AccountLimit.Application.Interface.LimitManagement
 {
     public interface ILimitManagementService
     {
-        Task CreateLimitManagement(LimitManagementCreateDTO request);
-        Task UpdateLimitManagement(Guid id, LimitManagementUpdateDTO request);
-        Task DeleteLimitManagement(Guid id);
-        Task<List<LimitManagementDTO>> SelectLimitManagement(LimitManagementRequest request);
+        Task<Result> CreateLimitManagement(LimitManagementCreateDTO request);
+        Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request);
+        Task<Result> DeleteLimitManagement(string cpf, string agency);
+        Task<Result> SelectLimitManagement(LimitManagementRequest request);
     }
 }
