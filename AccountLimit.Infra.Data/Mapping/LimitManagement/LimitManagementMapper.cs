@@ -25,9 +25,6 @@ namespace AccountLimit.Infra.Data.Mapping.LimitManagement
         }
         public static Result<LimitManagementInfo> ToDomain(this LimitManagementEntity entity)
         {
-            if (!Enum.TryParse<Period>(entity.Period, true, out var period))
-                return Result.Failure<LimitManagementInfo>("Period invalid.");
-
             return LimitManagementInfo.Create(
                 rawCpf: entity.Cpf,
                 rawAgency: entity.Agency,
