@@ -12,8 +12,8 @@ namespace AccountLimit.Application.Interface.LimitManagement
     public interface ILimitManagementService
     {
         Task<Result> CreateLimitManagement(LimitManagementCreateDTO request);
-        Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request);
-        Task<Result> DeleteLimitManagement(string cpf, string agency);
+        Task<Result> UpdateLimitManagement(string cpf, LimitManagementUpdateDTO request);
+        Task<Result> DeleteLimitManagement(string cpf);
         Task<Result> SelectLimitManagement(LimitManagementRequest request);
     }
 }

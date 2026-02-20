@@ -40,18 +40,18 @@ namespace AccountLimit.Application.Service.LimitManagement
             return Result.Success();
         }
 
-        public async Task<Result> DeleteLimitManagement(string cpf, string agency)
+        public async Task<Result> DeleteLimitManagement(string cpf)
         {
             try
             {
-                await LimitManagementExists(cpf, agency);
+                await LimitManagementExists(cpf);
             }
             catch (Exception ex)
             {
                 return Result.Failure(ex.Message);
             }
 
-            await _repository.DeleteLimitManagement(cpf, agency);
+            await _repository.DeleteLimitManagement(cpf);
             return Result.Success();
         }
 
@@ -70,9 +70,9 @@ namespace AccountLimit.Application.Service.LimitManagement
 
         }
 
-        public async Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request)
+        public async Task<Result> UpdateLimitManagement(string cpf, LimitManagementUpdateDTO request)
         {
-            var limitManagement = await LimitManagementExists(cpf, agency);
+            var limitManagement = await LimitManagementExists(cpf);
 
             var updateePixTransactionLimitResult = limitManagement.UpdatePixTransactionLimit(request.PixTransactionLimit);
             if (updateePixTransactionLimitResult.IsFailure)
@@ -85,9 +85,9 @@ namespace AccountLimit.Application.Service.LimitManagement
 
 
         #region Validation
-        private async Task<LimitManagementInfo> LimitManagementExists(string cpf, string agency)
+        private async Task<LimitManagementInfo> LimitManagementExists(string cpf)
         {
-            var limitManagementList = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = cpf, Agency = agency });
+            var limitManagementList = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = cpf});
             if (!limitManagementList.Any())
                 throw new Exception("Limit management not found.");
             return limitManagementList.FirstOrDefault();

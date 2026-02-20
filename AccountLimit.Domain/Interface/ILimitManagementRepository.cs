@@ -12,7 +12,7 @@ namespace AccountLimit.Domain.Interface
     {
         Task CreateLimitManagement(LimitManagementInfo request);
         Task UpdateLimitManagement(LimitManagementInfo request);
-        Task DeleteLimitManagement(string cpf, string agency);
+        Task DeleteLimitManagement(string cpf);
         Task<List<LimitManagementInfo>> SelectLimitManagement(LimitManagementRequest request);
     }
 }
