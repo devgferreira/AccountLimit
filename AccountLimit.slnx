@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="AccountLimit.API/AccountLimit.API.csproj" Id="2817b5e3-cb06-4bfc-a816-36ce7136c1ee" />
   <Project Path="AccountLimit.Application/AccountLimit.Application.csproj" Id="002eac89-0d83-45f6-84f6-c65ab7e4e8bf" />
   <Project Path="AccountLimit.Domain/AccountLimit.Domain.csproj" Id="d81341aa-e32e-437a-94f9-a40f0a3891bd" />
   <Project Path="AccountLimit.Infra.Data/AccountLimit.Infra.Data.csproj" Id="eb60e457-c572-4bf8-b7e3-c23c4658b0a5" />

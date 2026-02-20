@@ -17,6 +17,7 @@ namespace AccountLimit.Infra.Data.Entities.LimitManagement
         public string Agency { get; set; }
         [DynamoDBProperty]
         public string Account { get; set; }
+
         [DynamoDBProperty]
         public decimal PixTransactionLimit { get; set; }
     }

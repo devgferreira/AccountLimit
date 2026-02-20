@@ -22,7 +22,7 @@ namespace AccountLimit.Domain.ValueObjects
                 return Result.Failure<Agency>("Agency cannot be null or empty.");
             }
             var digitsOnlyAgency = new string(rawAgency.Where(char.IsDigit).ToArray());
-            if (digitsOnlyAgency.Length != 4 || digitsOnlyAgency.Length != 5)
+            if (digitsOnlyAgency.Length != 4)
             {
                 return Result.Failure<Agency>("Agency must have 4 or 5 digits.");
             }
