@@ -10,12 +10,12 @@ namespace AccountLimit.Domain.ValueObjects
 {
     public sealed record PixTransactionLimit
     {
-        public decimal Value { get; }
 
         private PixTransactionLimit(decimal value)
         {
             Value = value;
         }
+        public decimal Value { get; }
 
         public static Result<PixTransactionLimit> Create(decimal rawLimit)
         {

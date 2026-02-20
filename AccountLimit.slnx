@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="AccountLimit.Application/AccountLimit.Application.csproj" Id="002eac89-0d83-45f6-84f6-c65ab7e4e8bf" />
   <Project Path="AccountLimit.Domain/AccountLimit.Domain.csproj" Id="d81341aa-e32e-437a-94f9-a40f0a3891bd" />
 </Solution>

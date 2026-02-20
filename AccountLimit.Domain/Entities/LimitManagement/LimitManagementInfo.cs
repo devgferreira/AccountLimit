@@ -17,7 +17,15 @@ namespace AccountLimit.Domain.Entities.LimitManagement
         public Account Account { get; private set; }
         public Period Period { get; private set; }
         public PixTransactionLimit PixTransactionLimit { get; private set; }
-        private LimitManagementInfo() { }
+
+        public LimitManagementInfo(PixTransactionLimit pixTransactionLimit)
+        {
+            PixTransactionLimit = pixTransactionLimit;
+        }
+
+        public LimitManagementInfo()
+        {
+        }
 
         public static Result<LimitManagementInfo> Create(string rawCpf, string rawAgency, string rawAccount, Period period, decimal rawLimit)
         {
