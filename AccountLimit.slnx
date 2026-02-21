@@ -4,4 +4,5 @@
   <Project Path="AccountLimit.Domain/AccountLimit.Domain.csproj" Id="d81341aa-e32e-437a-94f9-a40f0a3891bd" />
   <Project Path="AccountLimit.Infra.Data/AccountLimit.Infra.Data.csproj" Id="eb60e457-c572-4bf8-b7e3-c23c4658b0a5" />
   <Project Path="AccountLimit.Infra.IoC/AccountLimit.Infra.IoC.csproj" Id="54bcd831-a10c-4333-ac11-a6003e19c174" />
+  <Project Path="AccountLimit.Test/AccountLimit.Test.csproj" Id="c515de03-1818-4ed5-8f5f-9f503e76acf2" />
 </Solution>
