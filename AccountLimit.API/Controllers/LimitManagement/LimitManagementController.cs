@@ -21,7 +21,14 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.CreateLimitManagement(request);
             if (result.IsFailure)
-                return BadRequest(result);
+            {
+                return result.Code switch
+                {
+                    "NotFound" => NotFound(result),
+                    "Ok" => NotFound(result),
+                    _ => BadRequest(result)
+                };
+            }
             return Ok(result);
         }
         [HttpPut]
@@ -29,7 +36,14 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.UpdateLimitManagement(cpf, agency, request);
             if (result.IsFailure)
-                return BadRequest(result);
+            {
+                return result.Code switch
+                {
+                    "NotFound" => NotFound(result),
+                    "Ok" => NotFound(result),
+                    _ => BadRequest(result)
+                };
+            }
             return Ok(result);
         }
         [HttpDelete]
@@ -37,7 +51,14 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.DeleteLimitManagement(cpf, agency);
             if (result.IsFailure)
-                return BadRequest(result);
+            {
+                return result.Code switch
+                {
+                    "NotFound" => NotFound(result),
+                    "Ok" => NotFound(result),
+                    _ => BadRequest(result)
+                };
+            }
             return Ok(result);
         }
         [HttpGet]
@@ -45,7 +66,14 @@ namespace AccountLimit.API.Controllers.LimitManagement
         {
             var result = await _service.SelectLimitManagement(request);
             if (result.IsFailure)
-                return BadRequest(result);
+            {
+                return result.Code switch
+                {
+                    "NotFound" => NotFound(result),
+                    "Ok" => Ok(result),
+                    _ => BadRequest(result)
+                };
+            }
             return Ok(result);
         }
     }

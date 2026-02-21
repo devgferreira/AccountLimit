@@ -5,12 +5,7 @@ using AccountLimit.Domain.Entities.LimitManagement;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
 using AccountLimit.Domain.Interface;
 using AccountLimit.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Net;
 namespace AccountLimit.Application.Service.LimitManagement
 {
     public class LimitManagementService : ILimitManagementService
@@ -33,12 +28,12 @@ namespace AccountLimit.Application.Service.LimitManagement
             );
 
             if (createResult.IsFailure)
-                return Result.Failure(createResult.Error);
+                return Result.Failure(createResult.Error, HttpStatusCode.BadRequest.ToString());
 
             var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = request.Cpf, Agency = request.Agency });
 
             if (limitManagement != null)
-                return Result.Failure("Limit management already exists for this CPF and Agency.");
+                return Result.Failure("Limit management already exists for this CPF and Agency.", HttpStatusCode.OK.ToString());
 
             await _repository.CreateLimitManagement(createResult.Value);
 
@@ -48,17 +43,17 @@ namespace AccountLimit.Application.Service.LimitManagement
         public async Task<Result> DeleteLimitManagement(string cpf, string agency)
         {
 
-            var cpfCreated = CreateCpf(cpf);
+            var cpfCreated = Cpf.Create(cpf);
             if (cpfCreated.IsFailure)
-                return Result.Failure(cpfCreated.Error);
+                return Result.Failure(cpfCreated.Error, HttpStatusCode.BadRequest.ToString());
 
-            var agencyCreate = CreateAgency(agency);
+            var agencyCreate = Agency.Create(agency);
             if (agencyCreate.IsFailure)
-                return Result.Failure(agencyCreate.Error);
+                return Result.Failure(agencyCreate.Error, HttpStatusCode.BadRequest.ToString());
 
             var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value, Agency = agencyCreate.Value });
             if (limitManagement == null)
-                return Result.Failure("Limit Managemnet not found");
+                return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
 
             await _repository.DeleteLimitManagement(cpf, agency);
@@ -81,17 +76,17 @@ namespace AccountLimit.Application.Service.LimitManagement
 
         public async Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request)
         {
-            var cpfCreated = CreateCpf(cpf);
+            var cpfCreated = Cpf.Create(cpf);
             if (cpfCreated.IsFailure)
-                return Result.Failure(cpfCreated.Error);
+                return Result.Failure(cpfCreated.Error, HttpStatusCode.BadRequest.ToString());
 
-            var agencyCreate = CreateAgency(agency);
+            var agencyCreate = Agency.Create(agency);
             if (agencyCreate.IsFailure)
-                return Result.Failure(agencyCreate.Error);
+                return Result.Failure(agencyCreate.Error, HttpStatusCode.BadRequest.ToString());
 
             var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value, Agency = agencyCreate.Value });
             if(limitManagement == null)
-                return Result.Failure("Limit Managemnet not found");
+                return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
             var updateePixTransactionLimitResult = limitManagement.UpdatePixTransactionLimit(request.PixTransactionLimit);
             if (updateePixTransactionLimitResult.IsFailure)
@@ -104,18 +99,6 @@ namespace AccountLimit.Application.Service.LimitManagement
 
 
         #region Validation
-
-        private Result<string> CreateCpf(string cpf)
-        {
-            var cpfCreated = Cpf.Create(cpf);
-            return Result.Success(cpfCreated.ToString());
-        }
-
-        private Result<string> CreateAgency(string agency)
-        {
-            var agencyCreated = Agency.Create(agency);
-            return Result.Success(agencyCreated.ToString());
-        }
 
         private async Task<LimitManagementInfo> LimitManagementExists(LimitManagementRequest request)
         {

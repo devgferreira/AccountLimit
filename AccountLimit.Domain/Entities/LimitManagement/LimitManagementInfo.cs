@@ -4,6 +4,7 @@ using AccountLimit.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,18 +32,20 @@ namespace AccountLimit.Domain.Entities.LimitManagement
             var result = PixTransactionLimit.Create(newLimit);
 
             if (result.IsFailure)
-                return Result.Failure(result.Error);
+                return Result.Failure(result.Error, HttpStatusCode.BadRequest.ToString());
 
             PixTransactionLimit = result.Value;
 
             return Result.Success();
         }
 
-        public Result<decimal> AuthorizePixTransaction(decimal amount)
+        public Result<decimal> AuthorizePixTransaction(decimal amount, string account)
         {
             if (amount <= 0)
                 return Result.Failure<decimal>("Amount must be greater than zero.");
 
+            if(account != Account.Value)
+                return Result.Failure<decimal>("Account number does not match the registered account.");
 
             if (amount > PixTransactionLimit.Value)
                 return Result.Failure<decimal>("Transaction amount exceeds the available limit.");

@@ -16,10 +16,20 @@ namespace AccountLimit.Domain.Commom
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string? Error { get; }
 
+        [JsonIgnore]
+        public string? Code { get; }
+
         protected Result(bool IsSucess, string error)
         {
             IsSuccess = IsSucess;
             Error = error;
+        }
+
+        protected Result(bool IsSucess, string error, string code)
+        {
+            IsSuccess = IsSucess;
+            Error = error;
+            Code = code;
         }
 
         protected Result(bool IsSucess)
@@ -29,7 +39,7 @@ namespace AccountLimit.Domain.Commom
 
         public static Result Success() => new(true, null);
 
-        public static Result Failure(string error) => new(false, error);
+        public static Result Failure(string error, string code) => new(false, error, code);
 
         public static Result<T> Success<T>(T value) => new(value, true, null);
 

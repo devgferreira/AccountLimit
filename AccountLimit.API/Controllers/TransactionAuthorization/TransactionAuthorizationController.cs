@@ -21,7 +21,12 @@ namespace AccountLimit.API.Controllers.TransactionAuthorization
             var result = await _transactionAuthorizationService.AuthorizePixTransaction(request);
             if (result.IsFailure)
             {
-                return BadRequest(result);
+                return result.Code switch
+                {
+                    "NotFound" => NotFound(result),
+                    "Ok" => Ok(result),
+                    _ => BadRequest(result)
+                };
             }
             return Ok(result);
         }
