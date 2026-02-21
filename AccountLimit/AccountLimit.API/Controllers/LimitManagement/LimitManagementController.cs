@@ -1,6 +1,7 @@
 ﻿using AccountLimit.Application.DTO.LimitManagement;
 using AccountLimit.Application.Interface.LimitManagement;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountLimit.API.Controllers.LimitManagement
@@ -17,6 +18,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
         }
 
         [HttpPost]
+        [Authorize(Roles = "ANALISTA_FRAUDE")]
         public async Task<IActionResult> CreateLimitManagement([FromBody] LimitManagementCreateDTO request)
         {
             var result = await _service.CreateLimitManagement(request);
@@ -32,6 +34,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
             return Ok(result);
         }
         [HttpPut]
+        [Authorize(Roles = "ANALISTA_FRAUDE")]
         public async Task<IActionResult> UpdateLimitManagement([FromQuery] string cpf, [FromQuery] string agency, [FromBody] LimitManagementUpdateDTO request)
         {
             var result = await _service.UpdateLimitManagement(cpf, agency, request);
@@ -47,6 +50,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
             return Ok(result);
         }
         [HttpDelete]
+        [Authorize(Roles = "ANALISTA_FRAUDE")]
         public async Task<IActionResult> DeleteLimitManagement([FromQuery] string cpf, [FromQuery] string agency)
         {
             var result = await _service.DeleteLimitManagement(cpf, agency);
@@ -62,6 +66,7 @@ namespace AccountLimit.API.Controllers.LimitManagement
             return Ok(result);
         }
         [HttpGet]
+        [Authorize(Roles = "ANALISTA_FRAUDE")]
         public async Task<IActionResult> SelectLimitManagement([FromQuery] LimitManagementRequest request)
         {
             var result = await _service.SelectLimitManagement(request);

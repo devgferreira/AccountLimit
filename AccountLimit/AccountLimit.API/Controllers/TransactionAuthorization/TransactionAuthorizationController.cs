@@ -1,5 +1,6 @@
 ﻿using AccountLimit.Application.DTO.TransactionAuthorization;
 using AccountLimit.Application.Interface.TransactionAuthorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountLimit.API.Controllers.TransactionAuthorization
@@ -16,6 +17,7 @@ namespace AccountLimit.API.Controllers.TransactionAuthorization
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AuthorizeTransaction([FromBody] TransactionAuthorizationDTO request)
         {
             var result = await _transactionAuthorizationService.AuthorizePixTransaction(request);
