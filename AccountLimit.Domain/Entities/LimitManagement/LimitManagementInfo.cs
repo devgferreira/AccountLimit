@@ -1,12 +1,6 @@
 ﻿using AccountLimit.Domain.Commom;
-using AccountLimit.Domain.Enums;
 using AccountLimit.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountLimit.Domain.Entities.LimitManagement
 {
@@ -44,7 +38,7 @@ namespace AccountLimit.Domain.Entities.LimitManagement
             if (amount <= 0)
                 return Result.Failure<decimal>("Amount must be greater than zero.");
 
-            if(account != Account.Value)
+            if (account != Account.Value)
                 return Result.Failure<decimal>("Account number does not match the registered account.");
 
             if (amount > PixTransactionLimit.Value)
@@ -74,7 +68,7 @@ namespace AccountLimit.Domain.Entities.LimitManagement
                 return Result.Failure<LimitManagementInfo>(limitResult.Error);
 
             var entity = new LimitManagementInfo
-            { 
+            {
                 Cpf = cpfResult.Value,
                 Agency = agencyResult.Value,
                 Account = accountResult.Value,

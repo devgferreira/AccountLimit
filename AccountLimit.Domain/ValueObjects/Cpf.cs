@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AccountLimit.Domain.Commom;
+﻿using AccountLimit.Domain.Commom;
 namespace AccountLimit.Domain.ValueObjects
 {
     public sealed record Cpf

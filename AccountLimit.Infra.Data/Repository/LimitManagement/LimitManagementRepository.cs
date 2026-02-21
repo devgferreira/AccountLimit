@@ -4,12 +4,6 @@ using AccountLimit.Domain.Interface;
 using AccountLimit.Infra.Data.Entities.LimitManagement;
 using AccountLimit.Infra.Data.Mapping.LimitManagement;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountLimit.Infra.Data.Repository.LimitManagementRepository
 {

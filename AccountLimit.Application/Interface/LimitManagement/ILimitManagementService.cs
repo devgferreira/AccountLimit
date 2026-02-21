@@ -1,11 +1,6 @@
 ﻿using AccountLimit.Application.DTO.LimitManagement;
 using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountLimit.Application.Interface.LimitManagement
 {

@@ -82,7 +82,7 @@ namespace AccountLimit.Application.Service.LimitManagement
             var (cpfCreated, agencyCreated) = limitManagementData.Value;
 
             var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreated.Value.ToString() });
-            if(limitManagement == null)
+            if (limitManagement == null)
                 return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
             var updateePixTransactionLimitResult = limitManagement.UpdatePixTransactionLimit(request.PixTransactionLimit);

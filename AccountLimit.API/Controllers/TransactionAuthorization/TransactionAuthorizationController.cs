@@ -16,7 +16,7 @@ namespace AccountLimit.API.Controllers.TransactionAuthorization
         }
 
         [HttpPost]
-        public async Task<IActionResult> AuthorizeTransaction([FromBody] TransactionAuthorizationDTO    request)
+        public async Task<IActionResult> AuthorizeTransaction([FromBody] TransactionAuthorizationDTO request)
         {
             var result = await _transactionAuthorizationService.AuthorizePixTransaction(request);
             if (result.IsFailure)

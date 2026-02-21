@@ -4,14 +4,8 @@ using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
 using AccountLimit.Domain.Interface;
-using AccountLimit.Infra.Data.Repository.LimitManagementRepository;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Xunit;
 
 
 namespace AccountLimit.Test.Service.LimitManagement
@@ -35,10 +29,10 @@ namespace AccountLimit.Test.Service.LimitManagement
             // Arrange
             var request = new LimitManagementCreateDTO
             {
-                Cpf = "123",               
-                Agency = "1",              
-                Account = "",              
-                PixTransactionLimit = -1   
+                Cpf = "123",
+                Agency = "1",
+                Account = "",
+                PixTransactionLimit = -1
             };
 
             // Act
@@ -98,7 +92,7 @@ namespace AccountLimit.Test.Service.LimitManagement
             _repoMock
                 .Setup(r => r.SelectLimitManagement(It.Is<LimitManagementRequest>(x =>
                     x.Cpf == request.Cpf && x.Agency == request.Agency)))
-                .ReturnsAsync(new List<LimitManagementInfo>()); 
+                .ReturnsAsync(new List<LimitManagementInfo>());
 
             _repoMock
                 .Setup(r => r.CreateLimitManagement(It.IsAny<LimitManagementInfo>()))
@@ -128,7 +122,7 @@ namespace AccountLimit.Test.Service.LimitManagement
         public async Task DeleteLimitManagement_WhenCpfInvalid_ShouldReturnBadRequest_AndNotQueryRepository()
         {
             // Arrange
-            var cpf = "123"; 
+            var cpf = "123";
             var agency = ValidAgency();
 
             // Act
@@ -147,7 +141,7 @@ namespace AccountLimit.Test.Service.LimitManagement
         {
             // Arrange
             var cpf = ValidCpf();
-            var agency = "1"; 
+            var agency = "1";
 
             // Act
             var result = await _service.DeleteLimitManagement(cpf, agency);
@@ -170,7 +164,7 @@ namespace AccountLimit.Test.Service.LimitManagement
             _repoMock
                 .Setup(r => r.SelectLimitManagement(It.Is<LimitManagementRequest>(x =>
                     x.Cpf == cpf && x.Agency == agency)))
-                .ReturnsAsync(new List<LimitManagementInfo>()); 
+                .ReturnsAsync(new List<LimitManagementInfo>());
 
             // Act
             var result = await _service.DeleteLimitManagement(cpf, agency);
@@ -257,7 +251,7 @@ namespace AccountLimit.Test.Service.LimitManagement
         public async Task UpdateLimitManagement_WhenCpfInvalid_ShouldReturnBadRequest_AndNotQueryRepository()
         {
             // Arrange
-            var cpf = "123"; 
+            var cpf = "123";
             var agency = ValidAgency();
             var request = new LimitManagementUpdateDTO { PixTransactionLimit = 200 };
 
@@ -277,7 +271,7 @@ namespace AccountLimit.Test.Service.LimitManagement
         {
             // Arrange
             var cpf = ValidCpf();
-            var agency = "1"; 
+            var agency = "1";
             var request = new LimitManagementUpdateDTO { PixTransactionLimit = 200 };
 
             // Act
@@ -331,7 +325,7 @@ namespace AccountLimit.Test.Service.LimitManagement
 
             var request = new LimitManagementUpdateDTO
             {
-                PixTransactionLimit = -1 
+                PixTransactionLimit = -1
             };
 
             // Act
@@ -383,9 +377,9 @@ namespace AccountLimit.Test.Service.LimitManagement
 
         #region Helpers (ajuste conforme suas regras reais)
 
-        private static string ValidCpf() => "12345678909";  
-        private static string ValidAgency() => "0001";     
-        private static string ValidAccount() => "123456";   
+        private static string ValidCpf() => "12345678909";
+        private static string ValidAgency() => "0001";
+        private static string ValidAccount() => "123456";
 
         private static LimitManagementInfo CreateValidLimitManagementInfo(string cpf, string agency, string account, decimal pixLimit)
         {

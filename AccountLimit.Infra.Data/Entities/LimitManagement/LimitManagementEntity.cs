@@ -1,10 +1,4 @@
-﻿using AccountLimit.Domain.Enums;
-using Amazon.DynamoDBv2.DataModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Amazon.DynamoDBv2.DataModel;
 
 namespace AccountLimit.Infra.Data.Entities.LimitManagement
 {

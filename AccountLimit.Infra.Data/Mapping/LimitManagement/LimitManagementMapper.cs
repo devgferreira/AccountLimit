@@ -1,12 +1,6 @@
 ﻿using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement;
-using AccountLimit.Domain.Enums;
 using AccountLimit.Infra.Data.Entities.LimitManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountLimit.Infra.Data.Mapping.LimitManagement
 {
@@ -34,5 +28,5 @@ namespace AccountLimit.Infra.Data.Mapping.LimitManagement
         }
     }
 
-    
+
 }

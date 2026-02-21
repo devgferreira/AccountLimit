@@ -4,12 +4,7 @@ using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
 using AccountLimit.Domain.Interface;
 using AccountLimit.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountLimit.Application.Service.TransactionAuthorization
 {
@@ -25,7 +20,7 @@ namespace AccountLimit.Application.Service.TransactionAuthorization
         public async Task<Result> AuthorizePixTransaction(TransactionAuthorizationDTO request)
         {
             var payerData = ValidateTransactionAuthorizationData(request.PayerCpf, request.PayerAgency, request.PayerAccount, "Payer");
-            if (payerData.IsFailure) 
+            if (payerData.IsFailure)
                 return payerData;
 
             var receiverData = ValidateTransactionAuthorizationData(request.ReceiverCpf, request.ReceiverAgency, request.ReceiverAccount, "Receiver");
