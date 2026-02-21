@@ -1,5 +1,7 @@
 ﻿using AccountLimit.Application.Interface.LimitManagement;
+using AccountLimit.Application.Interface.TransactionAuthorization;
 using AccountLimit.Application.Service.LimitManagement;
+using AccountLimit.Application.Service.TransactionAuthorization;
 using AccountLimit.Domain.Interface;
 using AccountLimit.Infra.Data.Repository.LimitManagementRepository;
 using Amazon;
@@ -52,6 +54,7 @@ namespace AccountLimit.Infra.IoC
             });
             services.AddScoped<ILimitManagementRepository, LimitManagementRepository>();
             services.AddScoped<ILimitManagementService, LimitManagementService>();
+            services.AddScoped<ITransactionAuthorizationService, TransactionAuthorizationService>();
 
 
             return services;

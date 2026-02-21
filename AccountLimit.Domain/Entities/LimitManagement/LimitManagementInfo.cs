@@ -25,6 +25,7 @@ namespace AccountLimit.Domain.Entities.LimitManagement
         {
         }
 
+
         public Result UpdatePixTransactionLimit(decimal newLimit)
         {
             var result = PixTransactionLimit.Create(newLimit);
@@ -35,6 +36,20 @@ namespace AccountLimit.Domain.Entities.LimitManagement
             PixTransactionLimit = result.Value;
 
             return Result.Success();
+        }
+
+        public Result<decimal> AuthorizePixTransaction(decimal amount)
+        {
+            if (amount <= 0)
+                return Result.Failure<decimal>("Amount must be greater than zero.");
+
+
+            if (amount > PixTransactionLimit.Value)
+                return Result.Failure<decimal>("Transaction amount exceeds the available limit.");
+
+            UpdatePixTransactionLimit(PixTransactionLimit.Value - amount);
+
+            return Result.Success(PixTransactionLimit.Value);
         }
 
         public static Result<LimitManagementInfo> Create(string rawCpf, string rawAgency, string rawAccount, decimal rawLimit)
