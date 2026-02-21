@@ -181,6 +181,10 @@ A API centraliza o processo de login, validação de credenciais e emissão de t
 
 ## 🚀 Como Rodar o Projeto
 
+Sempre que a aplicação é iniciada um usuário padrão é criado: Username: analista1, Password: analista123 e Role: ANALISTA_FRAUDE.
+
+Por padrão os end-points da controlar LimitManagement da AccountLimit.API só podem ser disparado caso o usuário tenha a role: ANALISTA_FRAUDE.
+
 ### 1. Configurar as variáveis de ambiente
 
 Crie um arquivo `.env` dentro do seguinte diretório:
