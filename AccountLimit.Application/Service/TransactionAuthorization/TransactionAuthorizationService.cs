@@ -66,6 +66,7 @@ namespace AccountLimit.Application.Service.TransactionAuthorization
 
         private Result<(Cpf cpf, Agency agency, Account account)> ValidateTransactionAuthorizationData(string cpf, string agency, string account, string paymentRole)
         {
+
             var cpfCreated = Cpf.Create(cpf);
             if (cpfCreated.IsFailure)
                 return Result.Failure<(Cpf, Agency, Account)>(
