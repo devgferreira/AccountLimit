@@ -59,7 +59,7 @@ namespace AccountLimit.Domain.Commom
         }
 
         protected internal Result(T? value, bool isSuccess, string error, string code)
-            : base(isSuccess, error)
+            : base(isSuccess, error, code)
         {
             Value = value;
         }
