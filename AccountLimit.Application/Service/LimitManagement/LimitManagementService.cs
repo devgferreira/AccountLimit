@@ -51,7 +51,7 @@ namespace AccountLimit.Application.Service.LimitManagement
             if (agencyCreate.IsFailure)
                 return Result.Failure(agencyCreate.Error, HttpStatusCode.BadRequest.ToString());
 
-            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value, Agency = agencyCreate.Value });
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreate.Value.ToString() });
             if (limitManagement == null)
                 return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
@@ -84,7 +84,7 @@ namespace AccountLimit.Application.Service.LimitManagement
             if (agencyCreate.IsFailure)
                 return Result.Failure(agencyCreate.Error, HttpStatusCode.BadRequest.ToString());
 
-            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value, Agency = agencyCreate.Value });
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreate.Value.ToString() });
             if(limitManagement == null)
                 return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
