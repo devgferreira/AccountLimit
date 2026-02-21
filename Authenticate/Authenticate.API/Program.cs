@@ -8,17 +8,26 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultCors", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddSingleton<IInMemoryUserRepository, InMemoryUserRepository>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
 var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
@@ -84,7 +93,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
 var adminUsername = Environment.GetEnvironmentVariable("ADMIN_USERNAME") ?? "analista1";
 var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "analista123";
 var adminRole = "ANALISTA_FRAUDE";
@@ -107,14 +115,13 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("DefaultCors");
 
 app.UseAuthentication();
 app.UseAuthorization();
