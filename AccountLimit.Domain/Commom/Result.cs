@@ -44,6 +44,7 @@ namespace AccountLimit.Domain.Commom
         public static Result<T> Success<T>(T value) => new(value, true, null);
 
         public static Result<T> Failure<T>(string error) => new(default, false, error);
+        public static Result<T> Failure<T>(string error, string code) => new(default, false, error, code);
         public static Result<T> Failure<T>(string error, T value) => new(value, false, error);
 
     }
@@ -51,6 +52,12 @@ namespace AccountLimit.Domain.Commom
     {
         public T? Value { get; }
         protected internal Result(T? value, bool isSuccess, string error)
+            : base(isSuccess, error)
+        {
+            Value = value;
+        }
+
+        protected internal Result(T? value, bool isSuccess, string error, string code)
             : base(isSuccess, error)
         {
             Value = value;

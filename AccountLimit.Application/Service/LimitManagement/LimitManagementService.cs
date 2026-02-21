@@ -43,15 +43,13 @@ namespace AccountLimit.Application.Service.LimitManagement
         public async Task<Result> DeleteLimitManagement(string cpf, string agency)
         {
 
-            var cpfCreated = Cpf.Create(cpf);
-            if (cpfCreated.IsFailure)
-                return Result.Failure(cpfCreated.Error, HttpStatusCode.BadRequest.ToString());
+            var limitManagementData = ValidateLimitManagementData(cpf, agency);
+            if (limitManagementData.IsFailure)
+                return limitManagementData;
 
-            var agencyCreate = Agency.Create(agency);
-            if (agencyCreate.IsFailure)
-                return Result.Failure(agencyCreate.Error, HttpStatusCode.BadRequest.ToString());
+            var (cpfCreated, agencyCreated) = limitManagementData.Value;
 
-            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreate.Value.ToString() });
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreated.Value.ToString() });
             if (limitManagement == null)
                 return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
@@ -76,15 +74,14 @@ namespace AccountLimit.Application.Service.LimitManagement
 
         public async Task<Result> UpdateLimitManagement(string cpf, string agency, LimitManagementUpdateDTO request)
         {
-            var cpfCreated = Cpf.Create(cpf);
-            if (cpfCreated.IsFailure)
-                return Result.Failure(cpfCreated.Error, HttpStatusCode.BadRequest.ToString());
 
-            var agencyCreate = Agency.Create(agency);
-            if (agencyCreate.IsFailure)
-                return Result.Failure(agencyCreate.Error, HttpStatusCode.BadRequest.ToString());
+            var limitManagementData = ValidateLimitManagementData(cpf, agency);
+            if (limitManagementData.IsFailure)
+                return limitManagementData;
 
-            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreate.Value.ToString() });
+            var (cpfCreated, agencyCreated) = limitManagementData.Value;
+
+            var limitManagement = await LimitManagementExists(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = agencyCreated.Value.ToString() });
             if(limitManagement == null)
                 return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
@@ -105,6 +102,25 @@ namespace AccountLimit.Application.Service.LimitManagement
             var limitManagementList = await _repository.SelectLimitManagement(request);
             return limitManagementList?.FirstOrDefault();
         }
+
+        private Result<(Cpf cpf, Agency agency)> ValidateLimitManagementData(string cpf, string agency)
+        {
+            var cpfCreated = Cpf.Create(cpf);
+            if (cpfCreated.IsFailure)
+                return Result.Failure<(Cpf, Agency)>(
+                    cpfCreated.Error,
+                    HttpStatusCode.BadRequest.ToString());
+
+            var agencyCreated = Agency.Create(agency);
+            if (agencyCreated.IsFailure)
+                return Result.Failure<(Cpf, Agency)>(
+                    agencyCreated.Error,
+                    HttpStatusCode.BadRequest.ToString());
+
+
+            return Result.Success((cpfCreated.Value, agencyCreated.Value));
+        }
+
         #endregion
     }
 }
