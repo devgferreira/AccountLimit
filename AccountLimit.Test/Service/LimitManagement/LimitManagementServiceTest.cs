@@ -23,7 +23,7 @@ namespace AccountLimit.Test.Service.LimitManagement
 
         public LimitManagementServiceTests()
         {
-            _repoMock = new Mock<ILimitManagementRepository>();
+            _repoMock = new Mock<ILimitManagementRepository>(MockBehavior.Strict);
             _service = new LimitManagementService(_repoMock.Object);
         }
 
@@ -35,10 +35,10 @@ namespace AccountLimit.Test.Service.LimitManagement
             // Arrange
             var request = new LimitManagementCreateDTO
             {
-                Cpf = "123",              
-                Agency = "1",            
-                Account = "0",           
-                PixTransactionLimit = -1  
+                Cpf = "123",               
+                Agency = "1",              
+                Account = "",              
+                PixTransactionLimit = -1   
             };
 
             // Act
@@ -178,6 +178,7 @@ namespace AccountLimit.Test.Service.LimitManagement
             // Assert
             Assert.True(result.IsFailure);
             Assert.Equal(HttpStatusCode.NotFound.ToString(), result.Code.ToString());
+            Assert.Contains("not found", result.Error, StringComparison.OrdinalIgnoreCase);
 
             _repoMock.Verify(r => r.DeleteLimitManagement(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _repoMock.VerifyAll();
@@ -237,7 +238,7 @@ namespace AccountLimit.Test.Service.LimitManagement
             // Assert
             Assert.True(result.IsSuccess);
 
-            Result<List<LimitManagementDTO>> data = Assert.IsType<Result<List<LimitManagementDTO>>>(result);
+            var data = Assert.IsType<Result<List<LimitManagementDTO>>>(result);
             Assert.Equal(2, data.Value.Count);
 
             Assert.Equal(list[0].Cpf.ToString(), data.Value[0].Cpf);
@@ -380,17 +381,17 @@ namespace AccountLimit.Test.Service.LimitManagement
 
         #endregion
 
-        #region Helpers 
+        #region Helpers (ajuste conforme suas regras reais)
 
-        private static string ValidCpf() => "12345678909";     
-        private static string ValidAgency() => "0001";          
-        private static string ValidAccount() => "123456";      
+        private static string ValidCpf() => "12345678909";  
+        private static string ValidAgency() => "0001";     
+        private static string ValidAccount() => "123456";   
 
         private static LimitManagementInfo CreateValidLimitManagementInfo(string cpf, string agency, string account, decimal pixLimit)
         {
             var result = LimitManagementInfo.Create(cpf, agency, account, pixLimit);
             if (result.IsFailure)
-                throw new InvalidOperationException($"Não consegui criar LimitManagementInfo válido para teste: {result.Error}");
+                throw new InvalidOperationException($"Falha criando LimitManagementInfo para teste: {result.Error}");
 
             return result.Value;
         }
