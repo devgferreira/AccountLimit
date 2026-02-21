@@ -1,4 +1,4 @@
-# AccountLimit
+# AccountLimit.API
 
 AccountLimit é uma Web API (.NET 8) para controle e autorização de transações PIX, avaliando o limite disponível de uma conta e decidindo se a transação pode ou não ser autorizada.
 
@@ -21,6 +21,8 @@ O projeto foi estruturado com Clean Architecture, aplicando conceitos de DDD (Do
 | **.NET 8**       | Plataforma principal para desenvolvimento da API. |
 | **DynamoDB**   | Banco de dados NoSQL totalmente gerenciado pela AWS, baseado em chave-valor e documentos, altamente escalável, com baixa latência e ideal para aplicações distribuídas e de alta performance. |
 | **Swagger**      | Documentação interativa da API. |
+| **JWT**      | Token de autenticação. |
+
 
 
 
@@ -33,13 +35,9 @@ O projeto foi estruturado com Clean Architecture, aplicando conceitos de DDD (Do
 
 ## 🚀 Como Rodar o Projeto
 
-### 1. Clonar o repositório
+### 1. Configurar a AWS e DynamoDB
 
-git clone [https://github.com/devgferreira/AccountLimit.git](https://github.com/devgferreira/AccountLimit)
-
-### 2. Configurar a AWS e DynamoDB
-
-### Criar uma tabela no DynamoDB
+#### Criar uma tabela no DynamoDB
 
 1. Acesse:
 👉 https://console.aws.amazon.com/dynamodbv2
@@ -58,7 +56,7 @@ git clone [https://github.com/devgferreira/AccountLimit.git](https://github.com/
         Clique em Create user
         Nome do usuário: dynamodb-app-user(ou outro se preferir)
    
-3. Adicionar permissões para DynamoDB
+2. Adicionar permissões para DynamoDB
 
 Escolha uma das opções:
 
@@ -93,7 +91,7 @@ Exemplo para São Paulo:
 
         sa-east-1
 
-### 3. Configurar as variáveis de ambiente
+### 2. Configurar as variáveis de ambiente
 
 Crie um arquivo `.env` dentro do seguinte diretório:
 
@@ -105,6 +103,11 @@ Com o seguinte conteúdo:
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_REGION=
+
+JWT_KEY=
+JWT_ISSUER=
+JWT_AUDIENCE=
+
 ```
 
 
@@ -144,4 +147,62 @@ Responsável por gerenciar a injeção de dependências do projeto.
 
 ## 📦 Teste
 Responsável por gerenciar os teste da aplicação.
+
+
+
+# Authenticate.API
+
+Authenticate.API é uma Web API (.NET 8) responsável pela autenticação de usuários e geração de tokens JWT (JSON Web Token) para autorização de acesso a serviços protegidos.
+
+A API centraliza o processo de login, validação de credenciais e emissão de tokens seguros, permitindo que outras aplicações utilizem autenticação baseada em Bearer Token.
+
+
+##  Funcionalidades
+
+-  Geração de token com base no login e registro.
+-  Persistência em memoria.
+-  Documentação da API via Swagger (OpenAPI).
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+| Tecnologia        | Descrição |
+|------------------|---------|
+| **.NET 8**       | Plataforma principal para desenvolvimento da API. |
+| **Swagger**      | Documentação interativa da API. |
+| **JWT**      | Token de autenticação. |
+
+
+## 📦 Pré-requisitos
+
+- ✅ [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- ✅ Um IDE compatível com .NET (recomendado: **Visual Studio 2025** ou **Visual Studio Code**)
+---
+
+## 🚀 Como Rodar o Projeto
+
+### 1. Configurar as variáveis de ambiente
+
+Crie um arquivo `.env` dentro do seguinte diretório:
+
+- `Authenticate.API/.env`
+
+Com o seguinte conteúdo:
+
+```env
+JWT_KEY=
+JWT_ISSUER=
+JWT_AUDIENCE=
+```
+# Estrutura do Projeto
+
+## 📦 API
+Responsável por expor endpoints e lidar com solicitações HTTP.
+
+- **Controller**: Controladores de API, responsáveis por receber requisições e retornar respostas.
+- **Models**: Entidades de domínio.
+- **Repository**: Contém a lógica de consulta às tabelas do banco.
+- **Security**: Contém a lógica de geração de token
+- **Service**: Contém lógica de negócios de alto nível e orquestra chamadas aos repositórios.
+
 
