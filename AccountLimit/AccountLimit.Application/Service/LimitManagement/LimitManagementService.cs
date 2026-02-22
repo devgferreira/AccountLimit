@@ -61,10 +61,10 @@ namespace AccountLimit.Application.Service.LimitManagement
         public async Task<Result> SelectLimitManagement(LimitManagementRequest request)
         {
             var digitsOnlyCpf = new string(request.Cpf.Where(char.IsDigit).ToArray());
-            var result = await _repository.SelectLimitManagement(request);
+            var result = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = digitsOnlyCpf , Agency = request.Agency});
             return Result.Success(result.Select(x => new LimitManagementDTO
             {
-                Cpf = digitsOnlyCpf,
+                Cpf = x.Cpf.ToString(),
                 Agency = x.Agency.ToString(),
                 Account = x.Account.ToString(),
                 PixTransactionLimit = x.PixTransactionLimit.Value
