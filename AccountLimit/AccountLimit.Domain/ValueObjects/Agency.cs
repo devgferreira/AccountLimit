@@ -19,7 +19,7 @@ namespace AccountLimit.Domain.ValueObjects
             var digitsOnlyAgency = new string(rawAgency.Where(char.IsDigit).ToArray());
             if (digitsOnlyAgency.Length != 4)
             {
-                return Result.Failure<Agency>("Agency must have 4 or 5 digits.");
+                return Result.Failure<Agency>("Agency must have 4 digits.");
             }
             return Result.Success(new Agency(digitsOnlyAgency));
         }
