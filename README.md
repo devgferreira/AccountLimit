@@ -11,7 +11,7 @@ O projeto foi estruturado com Clean Architecture, aplicando conceitos de DDD (Do
 -  Persistência no DynamoDB.
 -  Documentação da API via Swagger (OpenAPI).
 -  Arquitetura em camadas com Clean Architecture + DDD, facilitando testes unitários e evolução do domínio.
-
+-  Front-End feito em angular - https://github.com/devgferreira/AccountLimit-front-end
 ---
 
 ## 🛠️ Tecnologias Utilizadas
