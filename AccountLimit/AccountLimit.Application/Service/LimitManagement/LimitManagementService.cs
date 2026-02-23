@@ -54,14 +54,14 @@ namespace AccountLimit.Application.Service.LimitManagement
                 return Result.Failure("Limit Managemnet not found", HttpStatusCode.NotFound.ToString());
 
 
-            await _repository.DeleteLimitManagement(cpf, agency);
+            await _repository.DeleteLimitManagement(cpfCreated.Value.ToString(), agencyCreated.Value.ToString());
             return Result.Success();
         }
 
         public async Task<Result> SelectLimitManagement(LimitManagementRequest request)
         {
-            var digitsOnlyCpf = new string(request.Cpf.Where(char.IsDigit).ToArray());
-            var result = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = digitsOnlyCpf , Agency = request.Agency});
+            var cpfCreated = Cpf.Create(request.Cpf);
+            var result = await _repository.SelectLimitManagement(new LimitManagementRequest { Cpf = cpfCreated.Value.ToString(), Agency = request.Agency});
             return Result.Success(result.Select(x => new LimitManagementDTO
             {
                 Cpf = x.Cpf.ToString(),
@@ -69,7 +69,6 @@ namespace AccountLimit.Application.Service.LimitManagement
                 Account = x.Account.ToString(),
                 PixTransactionLimit = x.PixTransactionLimit.Value
             }).ToList());
-
 
         }
 
