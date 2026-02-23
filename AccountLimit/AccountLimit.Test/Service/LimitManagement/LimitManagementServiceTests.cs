@@ -4,6 +4,7 @@ using AccountLimit.Domain.Commom;
 using AccountLimit.Domain.Entities.LimitManagement;
 using AccountLimit.Domain.Entities.LimitManagement.Request;
 using AccountLimit.Domain.Interface;
+using AccountLimit.Domain.ValueObjects;
 using Moq;
 using System.Net;
 
@@ -214,16 +215,29 @@ namespace AccountLimit.Test.Service.LimitManagement
         public async Task SelectLimitManagement_ShouldReturnMappedDtos()
         {
             // Arrange
-            var request = new LimitManagementRequest { Cpf = ValidCpf(), Agency = ValidAgency() };
+            var rawCpf = ValidCpf();
+            var rawAgency = ValidAgency();
+
+            var request = new LimitManagementRequest
+            {
+                Cpf = rawCpf,
+                Agency = rawAgency
+            };
+
+            var cpfCreated = Cpf.Create(rawCpf);
+            var normalizedCpf = cpfCreated.Value.ToString();
 
             var list = new List<LimitManagementInfo>
-        {
-            CreateValidLimitManagementInfo(request.Cpf, request.Agency, "123456", 100),
-            CreateValidLimitManagementInfo(request.Cpf, request.Agency, "654321", 250),
-        };
+            {
+                CreateValidLimitManagementInfo(normalizedCpf, rawAgency, "123456", 100),
+                CreateValidLimitManagementInfo(normalizedCpf, rawAgency, "654321", 250),
+            };
 
             _repoMock
-                .Setup(r => r.SelectLimitManagement(request))
+                .Setup(r => r.SelectLimitManagement(It.Is<LimitManagementRequest>(x =>
+                    x.Cpf == normalizedCpf &&
+                    x.Agency == rawAgency
+                )))
                 .ReturnsAsync(list);
 
             // Act
@@ -232,13 +246,13 @@ namespace AccountLimit.Test.Service.LimitManagement
             // Assert
             Assert.True(result.IsSuccess);
 
-            var data = Assert.IsType<Result<List<LimitManagementDTO>>>(result);
-            Assert.Equal(2, data.Value.Count);
+            var dtos = Assert.IsType<Result<List<LimitManagementDTO>>>(result);
+            Assert.Equal(2, dtos.Value.Count);
 
-            Assert.Equal(list[0].Cpf.ToString(), data.Value[0].Cpf);
-            Assert.Equal(list[0].Agency.ToString(), data.Value[0].Agency);
-            Assert.Equal(list[0].Account.ToString(), data.Value[0].Account);
-            Assert.Equal(list[0].PixTransactionLimit.Value, data.Value[0].PixTransactionLimit);
+            Assert.Equal(list[0].Cpf.ToString(), dtos.Value[0].Cpf);
+            Assert.Equal(list[0].Agency.ToString(), dtos.Value[0].Agency);
+            Assert.Equal(list[0].Account.ToString(), dtos.Value[0].Account);
+            Assert.Equal(list[0].PixTransactionLimit.Value, dtos.Value[0].PixTransactionLimit);
 
             _repoMock.VerifyAll();
         }
